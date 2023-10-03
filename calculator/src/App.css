@@ -57,7 +57,15 @@
     background-color: lightgray !important;
    
 }
-.row1, .row2, .row3, .row4, .row5 
+.row1
+{
+  display:grid;
+  grid-gap:20px;
+  grid-template-columns:154px 154px 154px 154px 154px;
+  grid-template-rows: 50px;
+}
+
+ .row2, .row3, .row4, .row5 
 {
     display:grid;
     grid-gap:50px;

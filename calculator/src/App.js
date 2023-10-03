@@ -7,27 +7,26 @@ function App() {
   let btn = document.querySelector(".number");
   let btnValue;
   let result;
-  let isMinusClicked = false;
-  let isAddClicked = false;
   let numbers = [];
   let operators = [];
   let numbersWithSpaces = [];
-  let negativeCount = 0;
-  let[inputValue, setInputValue] = useState("");
-  let[isExponentClicked, setIsExponentClicked]=useState(false);
-const inputRef = useRef();
-
+  let [inputValue, setInputValue] = useState("");
+  let [isExponentClicked, setIsExponentClicked] = useState(false);
+  const inputRef = useRef();
+  let degreeHolder=0;
+  let radianHolder=0;
+  let isDeg=true;
   let isEXPClicked = false;
   let EXPArr = [];
   let EXPResult = 0;
   let exponentArr = [];
   let exponentResult = 0;
-  // let isExponentClicked = false;
+  
 
   function numberHolder(btnValue) {
     setInputValue((prevValue) => prevValue + btnValue);
   }
-  
+
   function runClear() {
     setInputValue("");
     operators = [];
@@ -60,11 +59,37 @@ const inputRef = useRef();
     setInputValue(factorialResult.toString());
   }
 
+  function funcDegree()
+  {
+    isDeg=true;
+   
+  }
+  function funcRadians()
+  {
+    isDeg=false;
+  }
   function runSin() {
-    setInputValue(Math.sin(Number(inputValue)).toString());
+    if(isDeg)
+    {
+      degreeHolder=Number(inputValue)* (Math.PI /180);
+      setInputValue((Math.sin(degreeHolder)).toString());
+    }
+    if(!isDeg)
+    {
+      setInputValue((Math.sin(Number(inputValue))).toString());
+    }
   }
   function runCos() {
-    setInputValue(Math.sin(Number(inputValue)).toString());
+    if(isDeg)
+    {
+      degreeHolder=Number(inputValue)* (Math.PI /180);
+      setInputValue((Math.cos(degreeHolder)).toString());
+    }
+    if(!isDeg)
+    {
+      setInputValue((Math.cos(Number(inputValue))).toString());
+    }
+    
   }
   function runLn() {
     setInputValue(Math.log(Number(inputValue)).toString());
@@ -83,8 +108,7 @@ const inputRef = useRef();
     isEXPClicked = true;
   }
   function runExp() {
-    if(inputValue.includes("^"))
-    {
+    if (inputValue.includes("^")) {
       return;
     }
     setInputValue((prevValue) => prevValue + "^");
@@ -112,10 +136,7 @@ const inputRef = useRef();
       EXPResult = EXPArr[0] + "0".repeat(EXPArr[1]);
       inputValue = EXPResult;
       isEXPClicked = false;
-      
-    }
-
-    else if (isExponentClicked) {
+    } else if (isExponentClicked) {
       exponentArr = inputValue.split("^");
       if (exponentArr.length !== 2) {
         setInputValue("Error: Invalid exponent format");
@@ -124,18 +145,17 @@ const inputRef = useRef();
       }
       const base = parseFloat(exponentArr[0]);
       const exponent = parseFloat(exponentArr[1]);
-  
+
       if (isNaN(base) || isNaN(exponent)) {
         setInputValue("Error: Invalid numbers for exponentiation");
         setIsExponentClicked(false);
         return;
       }
-  
+
       const result = Math.pow(base, exponent);
       setInputValue(result.toString());
       setIsExponentClicked(false);
-    }
-     else {
+    } else {
       let numbersWithSpaces = inputValue.split(/[-+x/^]/);
 
       numbers = numbersWithSpaces.filter((element) => element != "");
@@ -152,8 +172,7 @@ const inputRef = useRef();
         if (inputValue[i] == "/") {
           operators.push("/");
         }
-        if(inputValue[i]=="^")
-        {
+        if (inputValue[i] == "^") {
           operators.push("^");
         }
       }
@@ -167,15 +186,14 @@ const inputRef = useRef();
         if (operators[i - 1] == "-") {
           result -= parseFloat(numbers[i]);
         }
-        if (operators[i - 1] == "x") {
+        if (operators[i - 1] == "*") {
           result *= parseFloat(numbers[i]);
         }
         if (operators[i - 1] == "/") {
           result /= parseFloat(numbers[i]);
         }
-        if(operators[i-1]=="^")
-        {
-          result=Math.pow(result,parseFloat(numbers[i]));
+        if (operators[i - 1] == "^") {
+          result = Math.pow(result, parseFloat(numbers[i]));
         }
       }
 
@@ -190,33 +208,31 @@ const inputRef = useRef();
           <p>
             To use the built in calculator functions, enter a number using the
             calculator buttons and then press the appropriate function, such as
-            "cos","sin", etc...
+            "cos","sin", etc. To use degree or radians with sine or cosine, enter a number, then select 
+            'Degrees' or 'Radians' and then press 'sin' or 'cos'.
           </p>
         </div>
 
         <div className="grid-cont">
           <div className="input">
-          <input
-  type="text"
-  className="inputNumber"
-  value={inputValue}
-  onChange={(e) => setInputValue(e.target.value)}
-  ref={inputRef}
-/>
+            <input
+              type="text"
+              className="inputNumber"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              ref={inputRef}
+            />
             <br />
           </div>
           <div className="row1">
-            <button type="button" className="box btn">
-              Deg
+            <button onClick={funcRadians} type="button" className="box btn">
+              Radians
+            </button>
+            <button onClick={funcDegree} type="button" className="box btn">
+              Degree
             </button>
             <button onClick={runFactorial} type="button" className="box btn ">
               x!
-            </button>
-            <button type="button" className="box btn ">
-              (
-            </button>
-            <button type="button" className="box btn ">
-              )
             </button>
             <button onClick={runPercent} type="button" className="box btn ">
               %
